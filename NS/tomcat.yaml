@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-tomcat-svc3
+  namespace: kube-system
+  labels:
+    app: tomcat3
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+  selector:
+    app: tomcat3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: kube-system
+  name: my-tomcat3
+  labels:
+    app: tomcat2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tomcat3
+  template:
+    metadata:
+      labels:
+        app: tomcat3
+    spec:
+      containers:
+      - name: tomcat3
+        image: docker.io/jfclere/tomcat-in-the-cloud
+        ports:
+        - containerPort: 8080
